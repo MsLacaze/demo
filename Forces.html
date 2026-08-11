@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year 11 PESS 1.2: Complete Forces Lab & Arcade</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+        h1, h2 { color: #1a365d; text-align: center; }
+        .timer-box { position: sticky; top: 10px; background: #e2e8f0; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 1.2em; width: fit-content; margin: 0 auto 20px auto; color: #2c5282; border: 2px solid #cbd5e0; z-index: 100; }
+        
+        .nav-tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { padding: 12px 20px; border: none; background: #e2e8f0; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1em; }
+        .tab-btn.active { background: var(--primary); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .module { margin-bottom: 35px; padding: 25px; background: #f8fafc; border-left: 6px solid #3182ce; border-radius: 8px; }
+        
+        /* Fixed Memory Game */
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; }
+        .memory-card { aspect-ratio: 1.2; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.95em; text-align: center; border-radius: 8px; cursor: pointer; user-select: none; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .memory-card.revealed { background: #ffffff; border: 2px solid #3b82f6; color: #1e293b; }
+        .memory-card.matched { background: #22c55e; border-color: #22c55e; color: white; cursor: default; }
+
+        /* Tables & Worksheets */
+        .matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .matrix-table th, .matrix-table td { border: 1px solid #cbd5e0; padding: 10px; text-align: left; }
+        .matrix-table th { background: #e2e8f0; }
+        .question-card { background: white; padding: 18px; border-radius: 6px; margin-bottom: 18px; border: 1px solid #e2e8f0; }
+        .opt-btn { padding: 10px; border: 1px solid #cbd5e0; background: #edf2f7; border-radius: 6px; cursor: pointer; text-align: left; font-size: 0.95em; }
+        .opt-btn:hover { background: #e2e8f0; }
+        
+        .feedback { margin-top: 10px; font-weight: bold; font-size: 0.95em; }
+        .correct { color: #2f855a; }
+        .incorrect { color: #c53030; }
+        .btn-submit { display: block; width: 100%; padding: 12px; background: #2b6cb0; color: white; border: none; border-radius: 6px; font-size: 1.1em; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .btn-submit:hover { background: #2c5282; }
+        textarea { width: 100%; height: 70px; margin-top: 8px; border: 1px solid #cbd5e0; border-radius: 4px; padding: 8px; font-family: inherit; }
+        input[type="text"] { padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; width: 60%; }
+        .score-tracker { font-size: 1.1em; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+        .unscramble-display { font-size: 1.4em; font-weight: bold; letter-spacing: 4px; color: #1e3a8a; background: #e0e7ff; padding: 8px 16px; border-radius: 6px; display: inline-block; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PESS 1.2: Forces Lab & Arcade</h1>
+    <div class="timer-box">⏱️ Session Timer: <span id="time">30:00</span></div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchMainTab(0)">📘 Part 1: Interactive Worksheet</button>
+        <button class="tab-btn" onclick="switchMainTab(1)">🎮 Part 2: Arcade Games</button>
+    </div>
+
+    <!-- MAIN SECTION 1: WORKSHEET -->
+    <div class="tab-content active" id="main-0">
+        
+        <!-- MODULE 1 -->
+        <div class="module">
+            <h2>Module 1: Identify Forces (Contact vs. Non-Contact)</h2>
+            <p>Select the correct category for each core force type[cite: 1]:</p>
+            <div class="question-card">
+                <p>1. Friction Force[cite: 1]: <select id="m1_1"><option value="">Select...</option><option value="contact">Contact Force</option><option value="non-contact">Non-Contact Force</option></select></p>
+                <p>2. Gravitational Force[cite: 1]: <select id="m1_2"><option value="">Select...</option><option value="contact">Contact Force</option><option value="non-contact">Non-Contact Force</option></select></p>
+                <p>3. Magnetic Force[cite: 1]: <select id="m1_3"><option value="">Select...</option><option value="contact">Contact Force</option><option value="non-contact">Non-Contact Force</option></select></p>
+                <p>4. Electrostatic Force[cite: 1]: <select id="m1_4"><option value="">Select...</option><option value="contact">Contact Force</option><option value="non-contact">Non-Contact Force</option></select></p>
+                <p>5. Tension Force[cite: 1]: <select id="m1_5"><option value="">Select...</option><option value="contact">Contact Force</option><option value="non-contact">Non-Contact Force</option></select></p>
+                <button class="btn-submit" onclick="checkMod1()">Check Module 1 Answers</button>
+                <div id="m1-feedback" class="feedback"></div>
+            </div>
+        </div>
+
+        <!-- MODULE 2 -->
+        <div class="module">
+            <h2>Module 2: Real-World Scenarios Matrix</h2>
+            <p>Select both the force type and whether it acts via contact or non-contact[cite: 1]:</p>
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Force Type</th>
+                        <th>Contact vs. Non-Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1. Balloon sticking to a wall[cite: 1]</td>
+                        <td><select id="matrix1_1"><option value="">Select...</option><option value="electrostatic">Electrostatic</option><option value="magnetic">Magnetic</option></select></td>
+                        <td><select id="matrix1_2"><option value="">Select...</option><option value="contact">Contact</option><option value="non-contact">Non-Contact</option></select></td>
+                    </tr>
+                    <tr>
+                        <td>2. Swimmer pushing through water[cite: 1]</td>
+                        <td><select id="matrix2_1"><option value="">Select...</option><option value="drag">Drag</option><option value="normal">Normal</option></select></td>
+                        <td><select id="matrix2_2"><option value="">Select...</option><option value="contact">Contact</option><option value="non-contact">Non-Contact</option></select></td>
+                    </tr>
+                    <tr>
+                        <td>3. Compass needle aligning North[cite: 1]</td>
+                        <td><select id="matrix3_1"><option value="">Select...</option><option value="magnetic">Magnetic</option><option value="gravity">Gravity</option></select></td>
+                        <td><select id="matrix3_2"><option value="">Select...</option><option value="contact">Contact</option><option value="non-contact">Non-Contact</option></select></td>
+                    </tr>
+                    <tr>
+                        <td>4. Earth pulling an apple downward[cite: 1]</td>
+                        <td><select id="matrix4_1"><option value="">Select...</option><option value="gravity">Gravitational</option><option value="buoyant">Buoyant</option></select></td>
+                        <td><select id="matrix4_2"><option value="">Select...</option><option value="contact">Contact</option><option value="non-contact">Non-Contact</option></select></td>
+                    </tr>
+                    <tr>
+                        <td>5. Person pulling a sled with a rope[cite: 1]</td>
+                        <td><select id="matrix5_1"><option value="">Select...</option><option value="tension">Tension</option><option value="elastic">Elastic</option></select></td>
+                        <td><select id="matrix5_2"><option value="">Select...</option><option value="contact">Contact</option><option value="non-contact">Non-Contact</option></select></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-submit" onclick="checkMatrix()">Check Matrix Answers</button>
+            <div id="matrix-feedback" class="feedback"></div>
+        </div>
+
+        <!-- MODULE 3 -->
+        <div class="module">
+            <h2>Module 3: Multi-Force Diagram Identification</h2>
+            <div class="question-card">
+                <p><strong>Airplane in Flight:</strong> Identify the balanced force pairs[cite: 1].</p>
+                <p>What force opposes <strong>Weight</strong>[cite: 1]? <select id="d1"><option value="">Select...</option><option value="lift">Lift</option><option value="thrust">Thrust</option></select></p>
+                <p>What force opposes <strong>Thrust</strong>[cite: 1]? <select id="d2"><option value="">Select...</option><option value="drag">Drag</option><option value="normal">Normal</option></select></p>
+                <button class="btn-submit" onclick="checkDiagrams()">Validate Airplane Diagram</button>
+                <div id="diag-feedback" class="feedback"></div>
+            </div>
+        </div>
+
+        <!-- MODULE 4: WRITTEN EXPLANATION -->
+        <div class="module">
+            <h2>Module 4: Written Conceptual Explanations</h2>
+            <div class="question-card">
+                <p><strong>Question 1:</strong> Explain why walking requires friction between your shoe and the ground[cite: 1].</p>
+                <textarea id="w1"></textarea>
+                <button class="opt-btn" style="margin-top:5px;" onclick="toggleAnswer('a1')">Show Model Answer</button>
+                <p id="a1" style="display:none; color:#2b6cb0; margin-top:5px;"><strong>Model Answer:</strong> Your shoe pushes backward on the ground. Friction pushes forward on your shoe, creating the reaction force that moves you forward without slipping[cite: 1].</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN SECTION 2: GAMES -->
+    <div class="tab-content" id="main-1">
+        
+        <!-- GAME 1: MEMORY MATCH -->
+        <div class="module">
+            <h2>🧠 Game 1: Memory Match</h2>
+            <p>Click cards to reveal and pair each force with its correct property[cite: 1].</p>
+            <div class="score-tracker">Matches Found: <span id="mem-matches">0</span> / 6</div>
+            <div class="memory-grid" id="memory-board"></div>
+            <div class="feedback" id="mem-win" style="display:none; color:green; font-size:1.2em; margin-top:10px;">🎉 Outstanding! Memory Board Complete!</div>
+        </div>
+
+        <!-- GAME 2: SPEED DASH -->
+        <div class="module">
+            <h2>⚡ Game 2: Contact vs. Non-Contact Speed Dash</h2>
+            <div class="question-card">
+                <h3 id="dash-term">Loading...</h3>
+                <button class="opt-btn" onclick="answerDash('contact')">Contact Force</button>
+                <button class="opt-btn" onclick="answerDash('non-contact')">Non-Contact Force</button>
+                <div class="feedback" id="dash-feedback"></div>
+            </div>
+            <div class="score-tracker">Streak Score: <span id="dash-score">0</span></div>
+        </div>
+
+        <!-- GAME 3: FIXED WORD UNSCRAMBLE -->
+        <div class="module">
+            <h2>🔤 Game 3: Vocabulary Unscramble</h2>
+            <div class="question-card">
+                <p><strong>Hint:</strong> <span id="scramble-hint">Loading...</span></p>
+                <div><strong>Scrambled Letters:</strong></div>
+                <div id="scramble-word" class="unscramble-display">...</div>
+                <br>
+                <input type="text" id="scramble-input" placeholder="Type full word...">
+                <button class="opt-btn" onclick="checkScramble()">Submit Answer</button>
+                <div class="feedback" id="scramble-feedback"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchMainTab(index) {
+        document.querySelectorAll('.nav-tabs .tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
+        document.querySelectorAll('.tab-content').forEach((content, i) => content.classList.toggle('active', i === index));
+    }
+
+    // Worksheet Validations
+    function checkMod1() {
+        let score = 0;
+        if(document.getElementById('m1_1').value === 'contact') score++;
+        if(document.getElementById('m1_2').value === 'non-contact') score++;
+        if(document.getElementById('m1_3').value === 'non-contact') score++;
+        if(document.getElementById('m1_4').value === 'non-contact') score++;
+        if(document.getElementById('m1_5').value === 'contact') score++;
+        
+        const fb = document.getElementById('m1-feedback');
+        fb.textContent = `Score: ${score}/5 correct.`;
+        fb.className = score === 5 ? "feedback correct" : "feedback incorrect";
+    }
+
+    function checkMatrix() {
+        let score = 0;
+        if(document.getElementById('matrix1_1').value === 'electrostatic' && document.getElementById('matrix1_2').value === 'non-contact') score++;
+        if(document.getElementById('matrix2_1').value === 'drag' && document.getElementById('matrix2_2').value === 'contact') score++;
+        if(document.getElementById('matrix3_1').value === 'magnetic' && document.getElementById('matrix3_2').value === 'non-contact') score++;
+        if(document.getElementById('matrix4_1').value === 'gravity' && document.getElementById('matrix4_2').value === 'non-contact') score++;
+        if(document.getElementById('matrix5_1').value === 'tension' && document.getElementById('matrix5_2').value === 'contact') score++;
+
+        const fb = document.getElementById('matrix-feedback');
+        fb.textContent = `Matrix Score: ${score}/5 correct.`;
+        fb.className = score === 5 ? "feedback correct" : "feedback incorrect";
+    }
+
+    function checkDiagrams() {
+        const d1 = document.getElementById('d1').value;
+        const d2 = document.getElementById('d2').value;
+        const fb = document.getElementById('diag-feedback');
+        if(d1 === 'lift' && d2 === 'drag') {
+            fb.textContent = "Correct! Lift balances Weight; Drag opposes Thrust.";
+            fb.className = "feedback correct";
+        } else {
+            fb.textContent = "Incorrect choices. Try again!";
+            fb.className = "feedback incorrect";
+        }
+    }
+
+    function toggleAnswer(id) {
+        const el = document.getElementById(id);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Memory Game Engine
+    const memoryData = [
+        { id: 1, text: "Friction" }, { id: 1, text: "Opposes motion between touching surfaces[cite: 1]" },
+        { id: 2, text: "Gravitational" }, { id: 2, text: "Attracts mass toward Earth's centre[cite: 1]" },
+        { id: 3, text: "Normal Force" }, { id: 3, text: "Upward support force from a surface[cite: 1]" },
+        { id: 4, text: "Drag Force" }, { id: 4, text: "Fluid resistance like air or water drag[cite: 1]" },
+        { id: 5, text: "Magnetic" }, { id: 5, text: "Attracts/repels without physical contact[cite: 1]" },
+        { id: 6, text: "Tension" }, { id: 6, text: "Force transmitted through a pulled rope[cite: 1]" }
+    ];
+
+    let flippedCards = [];
+    let matchedCount = 0;
+
+    function initMemory() {
+        const board = document.getElementById('memory-board');
+        board.innerHTML = '';
+        const shuffled = [...memoryData].sort(() => Math.random() - 0.5);
+        
+        shuffled.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'memory-card';
+            card.dataset.id = item.id;
+            card.dataset.text = item.text;
+            card.textContent = "❓";
+            card.onclick = () => revealCard(card);
+            board.appendChild(card);
+        });
+    }
+
+    function revealCard(card) {
+        if (flippedCards.length < 2 && !card.classList.contains('revealed') && !card.classList.contains('matched')) {
+            card.classList.add('revealed');
+            card.textContent = card.dataset.text;
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkMemoryMatch, 800);
+            }
+        }
+    }
+
+    function checkMemoryMatch() {
+        const [c1, c2] = flippedCards;
+        if (c1.dataset.id === c2.dataset.id) {
+            c1.classList.add('matched');
+            c2.classList.add('matched');
+            matchedCount++;
+            document.getElementById('mem-matches').textContent = matchedCount;
+            if (matchedCount === 6) document.getElementById('mem-win').style.display = 'block';
+        } else {
+            c1.classList.remove('revealed');
+            c2.classList.remove('revealed');
+            c1.textContent = "❓";
+            c2.textContent = "❓";
+        }
+        flippedCards = [];
+    }
+
+    // Speed Dash Engine
+    const dashTerms = [
+        { term: "Gravitational Force", type: "non-contact" },
+        { term: "Friction Force", type: "contact" },
+        { term: "Electrostatic Force", type: "non-contact" },
+        { term: "Normal Support Force", type: "contact" },
+        { term: "Magnetic Attraction", type: "non-contact" }
+    ];
+    let dashIndex = 0;
+    let dashScore = 0;
+
+    function loadDash() {
+        if (dashIndex < dashTerms.length) {
+            document.getElementById('dash-term').textContent = dashTerms[dashIndex].term;
+        } else {
+            document.getElementById('dash-term').textContent = "Dash Completed! Score: " + dashScore;
+        }
+    }
+
+    function answerDash(choice) {
+        const fb = document.getElementById('dash-feedback');
+        if (choice === dashTerms[dashIndex].type) {
+            dashScore++;
+            fb.className = "feedback correct";
+            fb.textContent = "Correct!";
+        } else {
+            fb.className = "feedback incorrect";
+            fb.textContent = "Incorrect classification[cite: 1].";
+        }
+        document.getElementById('dash-score').textContent = dashScore;
+        dashIndex++;
+        setTimeout(() => { fb.textContent = ''; loadDash(); }, 700);
+    }
+
+    // Fixed Word Unscramble Engine
+    const scrambles = [
+        { word: "BUOYANT", hint: "Upward force exerted by a fluid on floating objects[cite: 1]." },
+        { word: "FRICTION", hint: "Force that opposes motion between surfaces in contact[cite: 1]." },
+        { word: "ELECTROSTATIC", hint: "Non-contact force caused by electric charges[cite: 1]." },
+        { word: "GRAVITY", hint: "Non-contact attractive force pulling objects toward Earth[cite: 1]." }
+    ];
+    let scrambleIdx = 0;
+
+    function shuffleString(str) {
+        let arr = str.split('');
+        for (let i = arr.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr.join(' ');
+    }
+
+    function loadScramble() {
+        if (scrambleIdx < scrambles.length) {
+            const item = scrambles[scrambleIdx];
+            document.getElementById('scramble-hint').textContent = item.hint;
+            document.getElementById('scramble-word').textContent = shuffleString(item.word);
+        } else {
+            document.getElementById('scramble-hint').textContent = "All vocabulary unscrambled!";
+            document.getElementById('scramble-word').textContent = "COMPLETE!";
+        }
+    }
+
+    function checkScramble() {
+        const input = document.getElementById('scramble-input').value.trim().toUpperCase();
+        const fb = document.getElementById('scramble-feedback');
+        if (input === scrambles[scrambleIdx].word) {
+            fb.className = "feedback correct";
+            fb.textContent = "Correct!";
+            scrambleIdx++;
+            document.getElementById('scramble-input').value = "";
+            setTimeout(() => { fb.textContent = ''; loadScramble(); }, 1000);
+        } else {
+            fb.className = "feedback incorrect";
+            fb.textContent = "Incorrect letters. Try again!";
+        }
+    }
+
+    // Timer
+    let time = 30 * 60;
+    setInterval(() => {
+        let m = Math.floor(time / 60);
+        let s = time % 60;
+        document.getElementById('time').textContent = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
+        if (time > 0) time--;
+    }, 1000);
+
+    // Init
+    initMemory();
+    loadDash();
+    loadScramble();
+</script>
+</body>
+</html>
